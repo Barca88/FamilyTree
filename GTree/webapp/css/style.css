@@ -1,0 +1,28 @@
+.headerColor {
+  background-color:DarkSlateGray;
+}
+
+.maxWidth {
+	width:100%;
+}
+
+.font-big {
+	font-size:30px;
+}
+
+.white-color>button>span>span{
+	color:white!important;
+}
+
+.no-shadow>button>span {
+	color:white!important;
+	text-shadow: none;
+}
+
+.margins-dialog>section>div>div {
+	margin:10px 10px 0px 10px;
+}
+
+.bottom-margin {
+	margin-bottom:10px;
+}

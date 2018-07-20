@@ -1,0 +1,29 @@
+<mvc:View controllerName="GTree.controller.View1" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+	<App>
+		<pages>
+			<VBox class="maxWidth">
+				<HBox class="headerColor">
+					<MenuButton id="meubotao" class="white-color no-shadow" text=" {i18n>username}" icon="sap-icon://customer" type="Transparent"
+						defaultAction="onDefaultAction">
+						<menu>
+							<Menu itemSelected="onMenuAction">
+								<items>
+									<MenuItem text="Edit Profile" icon="sap-icon://user-edit" press="onEditProfilePress"/>
+									<MenuItem text="Logout" icon="sap-icon://log"/>
+								</items>
+							</Menu>
+						</menu>
+					</MenuButton>
+				</HBox>
+			</VBox>
+			<Page title="welele">
+				<content>
+					<VBox>
+						<html:div id="tree"></html:div>
+					</VBox>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>
