@@ -35,6 +35,17 @@ public class User implements Serializable {
 
 	@Column(name = "\"personID\"", nullable = true)
 	private Integer personID;
+	
+	public User(){
+
+	}
+	public User(Integer id, String userName, String password, String email, Integer personId){
+		this.setId(id);
+		this.setUserName(userName);
+		this.setPassword(password);
+		this.setEmail(email);
+		this.setPersonID(personId);
+	}
 
 	/**
 	 * @return the id
