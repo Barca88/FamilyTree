@@ -1,7 +1,3 @@
-/**
-* Class for storing User info.
-* @author m.goncalves
-*/
 package main.com.familytree.persistence.user.model;
 		
 import java.io.Serializable;

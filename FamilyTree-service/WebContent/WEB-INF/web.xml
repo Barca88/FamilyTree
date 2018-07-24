@@ -24,10 +24,24 @@
 		<servlet-name>UserService</servlet-name>
 		<url-pattern>/user/*</url-pattern>
 	</servlet-mapping>
-
-
 	<!-- PERSON SERVLET -->
-
+	<servlet>
+		<display-name>PersonService</display-name>
+		<servlet-name>PersonService</servlet-name>
+		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
+		<init-param>
+			<param-name>jaxrs.serviceClasses</param-name>
+			<param-value>main.com.familytree.services.PersonServices</param-value>
+		</init-param>
+		<init-param>
+			<param-name>jaxrs.providers</param-name>
+			<param-value>main.com.familytree.common.CustomJacksonJaxbJsonProvider,main.com.familytree.common.exceptions.InternalServerErrorExceptionMapper</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PersonService</servlet-name>
+		<url-pattern>/person/*</url-pattern>
+	</servlet-mapping>
 
 
 	<!-- INIT APPLICATION -->
