@@ -20,9 +20,6 @@ public class UserBean {
     @PersistenceContext
     private EntityManager em;
 
-    /**
-     * Get all persons from the table.
-     */
 	public List<User> getAllPersons() {
 		return em.createNamedQuery("AllPersons", User.class).getResultList();
     }
@@ -33,13 +30,18 @@ public class UserBean {
 		}
 		return map;
 	}
-
-	/**
-	 * Get all persons from the table.
-	 */
 	@SuppressWarnings("unchecked")
 	public User getUserById(Integer id) {
 		List<User> u = em.createQuery("from User as u where u.id = :id").setParameter("id", id).getResultList();
+		if (u.isEmpty()) {
+			return new User();
+		} else {
+			return u.get(0);
+		}
+	}
+	@SuppressWarnings("unchecked")
+	public User getUserByUserName(String userName){
+		List<User> u = em.createQuery("from User as u where u.userName = :userName").setParameter("userName",userName).getResultList();
 		if (u.isEmpty()) {
 			return new User();
 		} else {
@@ -53,11 +55,8 @@ public class UserBean {
         em.persist(user);
         em.flush();
     }
-	//por testar
 	public boolean existUser(String userName){
-		if(em.createQuery("form User as u where u.userName = :userName").setParameter("userName", userName) != null){
-			return true;
-		}
-		return false;
+		if(this.getUserByUserName(userName).equals(new User())) return false;
+		return true;
 	}
 }

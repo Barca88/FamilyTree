@@ -56,7 +56,7 @@ public class UserServices extends HttpServlet {
 		try {
 
 			User user =  frontEndGson.fromJson(RequestHandler.handleRequest(request),User.class);
-			System.out.println(user);
+			System.out.println(userBean.existUser(user.getUserName()));
 			//user.setId(request.getRemoteUser();)
 
 			//userBean.addUser(user);

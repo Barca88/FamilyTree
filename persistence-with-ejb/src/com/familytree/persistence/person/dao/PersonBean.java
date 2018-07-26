@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.familytree.persistence.person.model.Person;
 import com.familytree.persistence.user.model.User;
 
 /**
@@ -22,20 +23,20 @@ public class PersonBean {
     /**
      * Get all persons from the table.
      */
-	public List<User> getAllPersons() {
-		return em.createNamedQuery("AllPersons", User.class).getResultList();
+	public List<Person> getAllPersons() {
+		return em.createNamedQuery("AllPersons", Person.class).getResultList();
     }
 
 	/**
 	 * Get all persons from the table.
 	 */
 	@SuppressWarnings("unchecked")
-	public User getUserById(Integer id) {
-		List<User> u = em.createQuery("from User as u where u.id = :id").setParameter("id", id).getResultList();
-		if (u.isEmpty()) {
-			return new User();
+	public Person getPersonByOwnerId(Integer ownerId) {
+		List<Person> p = em.createQuery("from Person as p where p.ownerId = :ownerId").setParameter("ownerId", ownerId).getResultList();
+		if (p.isEmpty()) {
+			return new Person();
 		} else {
-			return u.get(0);
+			return p.get(0);
 		}
 	}
 

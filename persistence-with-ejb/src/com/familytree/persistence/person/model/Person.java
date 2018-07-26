@@ -28,7 +28,7 @@ public class Person implements Serializable {
 	@Column(name = "\"lastName\"")
 	private String lastName;
 
-	@Column(name = "\"email\"", nullable = false)
+	@Column(name = "\"email\"")
 	private String email;
 
 	@Column(name = "\"birthDate\"")
@@ -54,6 +54,42 @@ public class Person implements Serializable {
 
 	@Column(name = "\"relatedId\"")
 	private Integer relatedId;
+	
+	public Person(){
+	}
+	public Person(Integer id, String firstName, String lastName, String email, 
+			LocalDate birthDate, LocalDate deathDate, Integer gender, Integer ownerId, 
+			Integer linkId, Integer fatherId, Integer motherId, Integer relatedId){
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.birthDate = birthDate;//LocalDate(birthDate);  TODO
+		this.deathDate = deathDate;//LocalDate(deathDate.getYear(),deathDate.monthOfYear(),deathDate.dayOfMonth());
+		this.gender = gender;
+		this.ownerId = ownerId;
+		this.linkId = linkId;
+		this.fatherId = fatherId;
+		this.motherId = motherId;
+		this.relatedId = relatedId;
+	}
+	public Person(Person p){
+		this.id = p.getId();
+		this.firstName = p.getFirstName();
+		this.lastName = p.getLastName();
+		this.email = p.getEmail();
+		this.birthDate = p.getBirthDate();
+		this.deathDate = p.getDeathDate();
+		this.gender = p.getGender();
+		this.ownerId = p.getOwnerId();
+		this.linkId = p.getLinkId();
+		this.fatherId = p.getFatherId();
+		this.motherId = p.getMotherId();
+		this.relatedId = p.getRelatedId();
+	}
+	public Person clone(){
+		return new Person(this);
+	}
 
 	/**
 	 * @return the id
