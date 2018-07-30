@@ -1,24 +1,28 @@
 package com.familytree.persistence.person.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.joda.time.LocalDate;
-
 @Entity
-@Table(name = "\"TREE\".\"Tree.Data::MainEntities.Person\"")
-@NamedQueries({ @NamedQuery(name = "AllUser", query = "select c from Person c"), })
+@Table(name = "\"FAMILYTREE\".\"familyTree.Data::MainEntities.Person\"")
+@NamedQueries({ @NamedQuery(name = "AllPersons", query = "select c from Person c"), })
 
 public class Person implements Serializable {
 	private static final long serialVersionUID = 88123489089299L;
 
 	@Id
+	@SequenceGenerator(name = "PERSON_ID_GENERATOR", sequenceName = "\"FAMILYTREE\".\"familyTree.Data.sequences::PersonSequence\"", allocationSize = 1) 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PERSON_ID_GENERATOR") 
  	@Column(name = "\"id\"")
  	private Integer id;
 
@@ -32,10 +36,10 @@ public class Person implements Serializable {
 	private String email;
 
 	@Column(name = "\"birthDate\"")
-	private LocalDate birthDate;
+	private Date birthDate;
 
 	@Column(name = "\"deathDate\"")
-	private LocalDate deathDate;
+	private Date deathDate;
 
 	@Column(name = "\"gender\"")
 	private Integer gender;
@@ -56,22 +60,6 @@ public class Person implements Serializable {
 	private Integer relatedId;
 	
 	public Person(){
-	}
-	public Person(Integer id, String firstName, String lastName, String email, 
-			LocalDate birthDate, LocalDate deathDate, Integer gender, Integer ownerId, 
-			Integer linkId, Integer fatherId, Integer motherId, Integer relatedId){
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.birthDate = birthDate;//LocalDate(birthDate);  TODO
-		this.deathDate = deathDate;//LocalDate(deathDate.getYear(),deathDate.monthOfYear(),deathDate.dayOfMonth());
-		this.gender = gender;
-		this.ownerId = ownerId;
-		this.linkId = linkId;
-		this.fatherId = fatherId;
-		this.motherId = motherId;
-		this.relatedId = relatedId;
 	}
 	public Person(Person p){
 		this.id = p.getId();
@@ -150,28 +138,28 @@ public class Person implements Serializable {
 	/**
 	 * @return the birthDate
 	 */
-	public LocalDate getBirthDate() {
+	public Date getBirthDate() {
 		return birthDate;
 	}
 
 	/**
 	 * @param birthDate the birthDate to set
 	 */
-	public void setBirthDate(LocalDate birthDate) {
+	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
 
 	/**
 	 * @return the deathDate
 	 */
-	public LocalDate getDeathDate() {
+	public Date getDeathDate() {
 		return deathDate;
 	}
 
 	/**
 	 * @param deathDate the deathDate to set
 	 */
-	public void setDeathDate(LocalDate deathDate) {
+	public void setDeathDate(Date deathDate) {
 		this.deathDate = deathDate;
 	}
 
@@ -366,4 +354,6 @@ public class Person implements Serializable {
 				+ ownerId + ", linkId=" + linkId + ", fatherId=" + fatherId + ", motherId=" + motherId + ", relatedId="
 				+ relatedId + "]";
 	}
+
+	
 }

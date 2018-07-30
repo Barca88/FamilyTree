@@ -1,7 +1,9 @@
 package com.familytree.persistence.person.dao;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -24,22 +26,41 @@ public class PersonBean {
      * Get all persons from the table.
      */
 	public List<Person> getAllPersons() {
-		return em.createNamedQuery("AllPersons", Person.class).getResultList();
+		List<Person> persons = em.createNamedQuery("AllPersons", Person.class).getResultList();
+		return persons;
+    }
+	/**
+     * Get Map of all persons from the table.
+     */
+	public Map<Integer,Person> getMapAllPersons() {
+		HashMap<Integer,Person> r = new HashMap<Integer,Person>();
+		List<Person> l = this.getAllPersons();
+		for(Person p: l) r.put(p.getId(), p);
+
+		return r;
     }
 
 	/**
 	 * Get all persons from the table.
 	 */
 	@SuppressWarnings("unchecked")
-	public Person getPersonByOwnerId(Integer ownerId) {
+	public List<Person> getPersonByOwnerId(Integer ownerId) {
 		List<Person> p = em.createQuery("from Person as p where p.ownerId = :ownerId").setParameter("ownerId", ownerId).getResultList();
-		if (p.isEmpty()) {
-			return new Person();
-		} else {
-			return p.get(0);
-		}
+		return p;
 	}
-
+	/**
+     * Get Map of all persons from the table by user id.
+     */
+	public Map<Integer,Person> getMapAllPersonsByUserId(Integer id) {
+		HashMap<Integer,Person> r = new HashMap<Integer,Person>();
+		List<Person> l = this.getPersonByOwnerId(id);
+		for(Person p: l) r.put(p.getId(), p);
+		
+		return r;
+    }
+	//update person mother
+	//update person father
+	//update person related
     /**
      * Add a person to the table.
      */
@@ -47,4 +68,5 @@ public class PersonBean {
         em.persist(person);
         em.flush();
     }
+	
 }

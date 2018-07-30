@@ -4,18 +4,23 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "\"FAMILYTREE\".\"familyTree.Data::MainEntities.User\"")
-@NamedQueries({ @NamedQuery(name = "AllPersons", query = "select c from User c"), })
+@NamedQueries({ @NamedQuery(name = "AllUsers", query = "select c from User c"), })
 public class User implements Serializable {
 	private static final long serialVersionUID = 981027347165437L;
 
 	@Id
+	@SequenceGenerator(name = "USER_ID_GENERATOR", sequenceName = "\"FAMILYTREE\".\"familyTree.Data.sequences::UserSequence\"", allocationSize = 1) 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_ID_GENERATOR") 
 	@Column(name = "\"id\"")
 	private Integer id;
 
@@ -24,9 +29,9 @@ public class User implements Serializable {
 
 	@Column(name = "\"personId\"", nullable = true)
 	private Integer personID;
-	
+
 	public User(){
-		
+
 	}
 	public User(Integer id, String name, Integer personId){
 		this.id = id;
@@ -134,6 +139,6 @@ public class User implements Serializable {
 		return "User [id=" + id + ", userName=" + userName + ", personID=" + personID + "]";
 	}
 
-	
+
 
 }

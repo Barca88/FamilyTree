@@ -1,9 +1,9 @@
 package com.familytree.services;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.familytree.persistence.person.dao.PersonBean;
+import com.familytree.persistence.person.model.Person;
 import com.familytree.persistence.user.dao.UserBean;
 import com.familytree.persistence.user.model.User;
+import com.familytree.services.models.Return;
 import com.familytree.util.GsonFactory;
 import com.familytree.util.RequestHandler;
 import com.google.gson.Gson;
@@ -31,32 +34,50 @@ public class UserServices extends HttpServlet {
 	@EJB
 	private UserBean userBean;
 
+	@EJB
+	private PersonBean personBean;
+
 	/** {@inheritDoc} */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String userId = request.getParameter("userId");
-			if (userId != null) {
-				User u = userBean.getUserById(Integer.valueOf(userId));
-				response.getWriter().println(frontEndGson.toJson(u));
-			} else {
-				List<User> resultList = userBean.getAllPersons();
-				response.getWriter().println(frontEndGson.toJson(resultList));
-			}
+			Return r = new Return();
+			String s = request.getRemoteUser();
+				
+			if(!userBean.existUser(s)){
+				User u = new User();
+				u.setUserName(s);
+				userBean.addUser(u);
+				r.setUser(u);
 
+			} else {
+				User u = userBean.getUserByUserName(s);
+				r.setUser(u);
+
+				if(u.getPersonID() != null){
+					Map<Integer,Person> map = personBean.getMapAllPersonsByUserId(u.getId());
+					map = r.addGroups(map);
+					r.addLines(map);		
+					r.addPersons(map);
+
+				}
+			}
+			response.getWriter().println(frontEndGson.toJson(r));
 		} catch (Exception e) {
 			LOGGER.error("Persistence operation failed", e);
 		}
-	}
+	} 
 
 	/** {@inheritDoc} */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	IOException {
-		try {
+		try { //UPDATE "FAMILYTREE"."familyTree.Data::MainEntities.User" SET "personId" = 1 WHERE "id" = 7;
 
-			User user =  frontEndGson.fromJson(RequestHandler.handleRequest(request),User.class);
-			System.out.println(userBean.existUser(user.getUserName()));
+			Return data =  frontEndGson.fromJson(RequestHandler.handleRequest(request),Return.class);
+			System.out.println(data);
+			
+			//System.out.println(userBean.existUser(user.getUserName()));
 			//user.setId(request.getRemoteUser();)
 
 			//userBean.addUser(user);
@@ -70,7 +91,7 @@ public class UserServices extends HttpServlet {
 
 	private void appendPersonTable(HttpServletResponse response) throws SQLException, IOException {
 		// Append table that lists all persons
-		List<User> resultList = userBean.getAllPersons();
+		List<User> resultList = userBean.getAllUsers();
 		response.getWriter().println(
 				"<p><table border=\"1\"><tr><th colspan=\"3\">" + (resultList.isEmpty() ? "" : resultList.size() + " ")
 				+ "Entries in the Database</th></tr>");
@@ -84,10 +105,10 @@ public class UserServices extends HttpServlet {
 		for (User p : resultList) {
 			response.getWriter().println(
 					"</td><td>"
-					+ p.getUserName()
-					+ "</td><td>"
-					+ iterator++
-					+ "</td></tr>");
+							+ p.getUserName()
+							+ "</td><td>"
+							+ iterator++
+							+ "</td></tr>");
 		}
 		response.getWriter().println("</table></p>");
 	}

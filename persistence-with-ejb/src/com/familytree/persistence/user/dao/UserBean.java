@@ -20,12 +20,12 @@ public class UserBean {
     @PersistenceContext
     private EntityManager em;
 
-	public List<User> getAllPersons() {
-		return em.createNamedQuery("AllPersons", User.class).getResultList();
+	public List<User> getAllUsers() {
+		return em.createNamedQuery("AllUsers", User.class).getResultList();
     }
 	public Map<Integer,User> getMapAllPersons(){
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
-		for(User u : em.createNamedQuery("AllPersons", User.class).getResultList()){
+		for(User u : em.createNamedQuery("AllUsers", User.class).getResultList()){
 			map.put(u.getId(), u.clone());
 		}
 		return map;
