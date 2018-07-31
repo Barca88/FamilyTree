@@ -1,21 +1,74 @@
-<mvc:View controllerName="GTree.controller.View1" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
-	<VBox class="maxWidth">
-		<HBox class="headerColor">
-			<MenuButton id="meubotao" class="white-color no-shadow" text=" {i18n>username}" icon="sap-icon://customer" type="Transparent"
-				defaultAction="onDefaultAction">
-				<menu>
-					<Menu itemSelected="onMenuAction">
-						<items>
-							<MenuItem text="Edit Profile" icon="sap-icon://user-edit" press="onEditProfilePress"/>
-							<MenuItem text="Logout" icon="sap-icon://log" press="onAfterRendering"/>
-						</items>
-					</Menu>
-				</menu>
-			</MenuButton>
-		</HBox>
-		<ScrollContainer id="scrollOLLLAAA"  class="treeColor" height="720px" horizontal="true" vertical="true" focusable="true">
-			<html:div id="tree"></html:div>
-		</ScrollContainer>
-	</VBox>
+<mvc:View height="100%" controllerName="GTree.controller.View1" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:gr="sap.suite.ui.commons.networkgraph" xmlns:layout="sap.suite.ui.commons.networkgraph.layout" xmlns="sap.m">
+	<Page title="Centered Title" class="sapUiContentPadding" showNavButton="false" showHeader="true">
+		<headerContent>
+			<Button icon="sap-icon://action" tooltip="Share"/>
+		</headerContent>
+		<content>
+			<Page id="sideContentContainer" showHeader="false" showNavButton="false">
+				<l:DynamicSideContent id="DynamicSideContent" class="sapUiDSCExplored sapUiContentPadding" containerQuery="true"
+					sideContentFallDown="BelowM" breakpointChanged="handleBreakpointChangeEvent">
+					<l:mainContent>
+						<VBox>
+							<gr:Graph height="100%" width="100%" nodes="{/nodes}" lines="{/lines}" groups="{/groups}" orientation="TopBottom" id="graph">
+								<gr:statuses></gr:statuses>
+								<gr:layoutData>
+									<FlexItemData growFactor="1" shrinkFactor="1" baseSize="0%" minWidth="300px"/>
+								</gr:layoutData>
+								<gr:layoutAlgorithm>
+									<layout:LayeredLayout mergeEdges="true" nodePlacement="LinearSegments" nodeSpacing="55"/>
+								</gr:layoutAlgorithm>
+								<gr:nodes>
+									<gr:Node key="{key}" title="{title}" press="nodePress" icon="{icon}" group="{group}" attributes="{path:'attributes', templateShareable:true}" shape="{shape}"
+										status="{status}" showDetailButton="false" showActionLinksButton="false">
+										<gr:customData>
+											<core:CustomData key="gender" value="{gender}"/>
+											<core:CustomData key="birthday" value="{birthday}"/>
+											<core:CustomData key="lname" value="{lname}"/>
+										</gr:customData>
+										<gr:attributes>
+											<gr:ElementAttribute label="{label}" value="{value}"/>
+										</gr:attributes>
+									</gr:Node>
+								</gr:nodes>
+								<gr:lines>
+									<gr:Line from="{from}" to="{to}" status="LineStatus" press="onLineClick" arrowOrientation="None"/>
+								</gr:lines>
+								<gr:groups>
+									<gr:Group key="{key}" title="{title}" press="onGroupClick"></gr:Group>
+								</gr:groups>
+							</gr:Graph>
+						</VBox>
+					</l:mainContent>
+					<l:sideContent >
+						<l:VerticalLayout width="100%">
+							<l:content>
+								<VBox id="dialog_Edit_Person_Container">
+									<Button text="Close" type="Transparent" press="handleSideContentHide"/>
+									<Text text="First Name" textAlign="Begin"/>
+									<Input id="inFName" value="{modelo>/name}" placeholder="First Name" type="Text"/>
+									<Text text="Last Name" textAlign="Begin"/>
+									<Input id="inLName" value="{modelo>/lname}" placeholder="Last Name" type="Text"/>
+									<Text text="Birth Date" textAlign="Begin"/>
+									<Input id="inBirth" value="{modelo>/birthday}" placeholder="Birth Date" type="Text"/>
+									<Text text="Death Date" textAlign="Begin"/>
+									<Input id="inDeath" value="{deathday}" placeholder="Death Date" type="Text"/>
+									<Text text="Gender" textAlign="Begin"/>
+									<Input id="inGender" value="{modelo>/gender}" placeholder="Gender" type="Text"/>
+								</VBox>
+							</l:content>
+						</l:VerticalLayout>
+					</l:sideContent>
+				</l:DynamicSideContent>
+			</Page>
+		</content>
+		<footer>
+			<Toolbar>
+				<content>
+					<Button text="Toggle" type="Accept" press="handleToggleClick" id="toggleButton" />
+					<Button text="Open Side Content" id="showSideContentButton" press="handleSideContentShow" visible="false" />
+				</content>
+			</Toolbar>
+		</footer>
+	</Page>
 </mvc:View>

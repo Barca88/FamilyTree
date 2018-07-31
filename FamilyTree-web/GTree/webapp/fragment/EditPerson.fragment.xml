@@ -1,0 +1,25 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml" id="editPersonDialog">
+	<Dialog id="editPerson" showHeader="false" class="margins-dialog">
+		
+			<core:Icon src="sap-icon://user-edit" class="font-big bottom-margin"/>
+	
+		<content>
+			<VBox id="dialog_Edit_Person_Container">
+				<Text text="First Name" textAlign="Begin"/>
+				<Input id="inFName" value="{modelo>/name}" placeholder="First Name" type="Text"/>
+				<Text text="Last Name" textAlign="Begin"/>
+				<Input id="inLName" value="{modelo>/lname}" placeholder="Last Name" type="Text"/>
+				<Text text="Birth Date" textAlign="Begin"/>
+				<Input id="inBirth" value="{modelo>/birthday}" placeholder="Birth Date" type="Text"/>
+				<Text text="Death Date" textAlign="Begin"/>
+				<Input id="inDeath" value="{deathday}" placeholder="Death Date" type="Text"/>
+				<Text text="Gender" textAlign="Begin"/>
+				<Input id="inGender" value="{modelo>/gender}" placeholder="Gender" type="Text"/>
+			</VBox>
+		</content>
+		<HBox id="dialog_Edit_Person_Button_Container" justifyContent="End">
+			<Button id="button_Dialog_EditPerson_Save" text="Save" type="Transparent"></Button>
+			<Button id="button_Dialog_EditPerson_Close" text="Close" type="Transparent"></Button>
+		</HBox>
+	</Dialog>
+</core:FragmentDefinition>
