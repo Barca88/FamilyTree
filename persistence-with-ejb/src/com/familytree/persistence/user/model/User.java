@@ -14,7 +14,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "\"FAMILYTREE\".\"familyTree.Data::MainEntities.User\"")
-@NamedQueries({ @NamedQuery(name = "AllUsers", query = "select c from User c"), })
+@NamedQueries({ @NamedQuery(name = "AllUsers", query = "select c from User c"), 
+@NamedQuery(name="updatePersonId",query="update User set personId = :personId where id = :id") })
 public class User implements Serializable {
 	private static final long serialVersionUID = 981027347165437L;
 
@@ -28,7 +29,7 @@ public class User implements Serializable {
 	private String userName;
 
 	@Column(name = "\"personId\"", nullable = true)
-	private Integer personID;
+	private Integer personId;
 
 	public User(){
 
@@ -36,12 +37,12 @@ public class User implements Serializable {
 	public User(Integer id, String name, Integer personId){
 		this.id = id;
 		this.userName = name;
-		this.personID = personId;
+		this.personId = personId;
 	}
 	public User(User u){
 		this.id = u.getId();
 		this.userName = u.getUserName();
-		this.personID = u.getPersonID();
+		this.personId = u.getPersonId();
 	}
 	public User clone(){
 		return new User(this);
@@ -75,17 +76,17 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @return the personID
+	 * @return the personId
 	 */
-	public Integer getPersonID() {
-		return personID;
+	public Integer getPersonId() {
+		return personId;
 	}
 
 	/**
-	 * @param personID the personID to set
+	 * @param personId the personId to set
 	 */
-	public void setPersonID(Integer personID) {
-		this.personID = personID;
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
 	}
 
 	/* (non-Javadoc)
@@ -96,7 +97,7 @@ public class User implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((personID == null) ? 0 : personID.hashCode());
+		result = prime * result + ((personId == null) ? 0 : personId.hashCode());
 		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}
@@ -118,10 +119,10 @@ public class User implements Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (personID == null) {
-			if (other.personID != null)
+		if (personId == null) {
+			if (other.personId != null)
 				return false;
-		} else if (!personID.equals(other.personID))
+		} else if (!personId.equals(other.personId))
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -136,7 +137,7 @@ public class User implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", personID=" + personID + "]";
+		return "User [id=" + id + ", userName=" + userName + ", personId=" + personId + "]";
 	}
 
 

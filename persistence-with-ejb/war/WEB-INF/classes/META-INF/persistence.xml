@@ -30,7 +30,7 @@
 			
 			<!-- Optimization #12 - turn logging off -->
 			<!-- property name="eclipselink.logging.level" value="INFO" / -->
-			<property name="eclipselink.logging.level" value="OFF" /> 
+			<property name="eclipselink.logging.level" value="ALL" /> 
 			
 			<!-- Optimization #13 - close EntityManager on commit, to avoid cost of 
 				resume 

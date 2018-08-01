@@ -48,6 +48,11 @@ public class UserBean {
 			return u.get(0);
 		}
 	}
+	public void updatePersonId(Integer idUser, Integer personId){
+		em.createNamedQuery("updatePersonId",User.class)
+						.setParameter("personId",personId)
+						.setParameter("id",idUser).executeUpdate();
+	}
     /**
      * Add a person to the table.
      */

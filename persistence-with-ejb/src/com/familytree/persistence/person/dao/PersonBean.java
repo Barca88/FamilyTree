@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import com.familytree.persistence.person.model.Person;
-import com.familytree.persistence.user.model.User;
 
 /**
  * Bean encapsulating all operations for a person.
@@ -64,9 +63,14 @@ public class PersonBean {
     /**
      * Add a person to the table.
      */
-	public void addPerson(User person) {
+	public void addPerson(Person person) {
         em.persist(person);
         em.flush();
     }
-	
+	public void deletePerson(Person p){
+		em.remove(em.merge(p));
+	}
+	public void updatePerson(Person n) {
+		em.merge(n);
+	}
 }

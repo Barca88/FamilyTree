@@ -8,7 +8,7 @@ public class Line {
 	}
 	public Line(Integer f,Integer t){
 		this.from = f;
-		this.to= t;
+		this.to = t;
 	}
 	public Line(Line l){
 		this.from = l.getFrom();
@@ -40,6 +40,13 @@ public class Line {
 	 */
 	public void setTo(Integer to) {
 		this.to = to;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Line [from=" + from + ", to=" + to + "]";
 	}
 
 }

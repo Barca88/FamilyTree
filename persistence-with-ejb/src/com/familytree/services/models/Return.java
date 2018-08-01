@@ -40,6 +40,60 @@ public class Return {
 	public void addPersons(Map<Integer,Person> map){
 		this.setNodes(map.values());
 	}
+	public Map<Integer,Person> returnToMap(){
+		HashMap<Integer,Person> map = new HashMap<Integer,Person>();
+		for(Person p : this.getNodes()){
+			map.put(p.getId(), p);
+		}
+		map = (HashMap<Integer, Person>) addParents(this.lines,map);
+		map = (HashMap<Integer, Person>) addRelations(this.groups,map);
+		return map;
+	}
+	//looks inefficient 
+	public Map<Integer,Person> addRelations(List<Group> groups, Map<Integer,Person> map){
+		HashMap<Integer,Group> mgroup = new HashMap<Integer,Group>();
+		HashMap<Integer,List<Person>> mpair = new HashMap<Integer,List<Person>>();
+		ArrayList<Person> aux;
+		Person p1,p2;
+
+		for(Group g : groups) mgroup.put(g.getId(),g);
+
+		for(Person p: map.values()){
+			if(p.getRelatedId() != null){
+				if(mpair.containsKey(p.getRelatedId())){
+					mpair.get(p.getRelatedId()).add(p);
+				} else {
+					aux = new ArrayList<Person>();
+					aux.add(p);
+					mpair.put(p.getRelatedId(),aux);
+				}
+			}
+		}
+
+		for(List<Person> l :mpair.values()){
+			if(l.size() == 2){
+				p1 = l.get(0);
+				p2 = l.get(1);
+				p1.setRelatedId(p2.getId());
+				p2.setRelatedId(p1.getId());
+			}
+		}
+		return map;
+	}
+	public Map<Integer,Person> addParents(List<Line> list, Map<Integer,Person> map){
+		Person pai;
+		Person son;
+		for(Line l : list){
+			if(map.containsKey(l.getTo()) && map.containsKey(l.getFrom())){
+				son = map.get(l.getTo());
+				pai = map.get(l.getFrom());
+				if(pai.getGender() == 1){
+					son.setFatherId(pai.getId());
+				} else son.setMotherId(pai.getId());
+			}
+		}
+		return map;
+	}
 	public Map<Integer,Person> addGroups(Map<Integer,Person> map){
 		ArrayList<Group> groups = new ArrayList<Group>();
 		//group
