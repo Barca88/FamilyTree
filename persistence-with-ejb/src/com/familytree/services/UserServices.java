@@ -98,7 +98,6 @@ public class UserServices extends HttpServlet {
 			for(Person p : oldData.values()){
 				if(!newData.containsKey(p.getId()) && p.getId() != u.getId()){
 					personBean.deletePerson(p);
-					oldData.remove(p.getId());
 				}
 			}
 			
@@ -119,7 +118,7 @@ public class UserServices extends HttpServlet {
 
 			oldData = (HashMap<Integer, Person>) personBean.getMapAllPersonsByUserId(u.getId()); //update oldData whit db
 			
-			//update Person
+			//update Persons
 			for(Person p : news){
 				if(!p.equals(oldData.get(p.getId()))){
 					personBean.updatePerson(p);
