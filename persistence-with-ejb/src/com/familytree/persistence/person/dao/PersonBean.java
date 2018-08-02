@@ -60,9 +60,10 @@ public class PersonBean {
     /**
      * Add a person to the table.
      */
-	public void addPerson(Person person) {
+	public Person addPerson(Person person) {
         em.persist(person);
         em.flush();
+        return person;
     }
 	public void deletePerson(Person p){
 		em.remove(em.merge(p));

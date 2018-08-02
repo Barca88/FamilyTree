@@ -51,12 +51,14 @@ public class Return implements Serializable{
 		for(Person p : this.getNodes()){
 			map.put(p.getId(), p);
 		}
-		map = (HashMap<Integer, Person>) addParents(this.lines,map);
+		map = (HashMap<Integer, Person>) updateParents(this.lines,map);
 		map = (HashMap<Integer, Person>) addRelations(this.groups,map);
 		return map;
 	}
 	public Map<Integer,Person> addRelations(List<Group> groups, Map<Integer,Person> map){
+		//map of groups
 		HashMap<Integer,Group> mgroup = new HashMap<Integer,Group>();
+		//map of pairs
 		HashMap<Integer,List<Person>> mpair = new HashMap<Integer,List<Person>>();
 		ArrayList<Person> aux;
 		Person p1,p2;
@@ -74,7 +76,7 @@ public class Return implements Serializable{
 				}
 			}
 		}
-
+		
 		for(List<Person> l :mpair.values()){
 			if(l.size() == 2){
 				p1 = l.get(0);
@@ -86,21 +88,60 @@ public class Return implements Serializable{
 		return map;
 	}
 	/**
-	 * Function created to 
+	 * Function created to update parents of all persons using the lines created on the front end
 	 * @param list
 	 * @param map
 	 * @return
 	 */
-	public Map<Integer,Person> addParents(List<Line> list, Map<Integer,Person> map){
-		Person pai;
-		Person son;
+	public Map<Integer,Person> updateParents(List<Line> list, Map<Integer,Person> map){
+		Person p1;
+		Person p2;
+		List<Integer> auxl;
+		//key = to, Value = From
+		HashMap<Integer,List<Integer>> auxMap = new HashMap<Integer,List<Integer>>();
+		//Clear Parents
+		for(Person p : map.values()){
+			p.setFatherId(null);
+			p.setMotherId(null);
+		}
+		//load HashMap
 		for(Line l : list){
-			if(map.containsKey(l.getTo()) && map.containsKey(l.getFrom())){
-				son = map.get(l.getTo());
-				pai = map.get(l.getFrom());
-				if(pai.getGender() == 1){
-					son.setFatherId(pai.getId());
-				} else son.setMotherId(pai.getId());
+			if(auxMap.containsKey(l.getTo())){
+				auxMap.get(l.getTo()).add(l.getFrom());
+			} else {
+				auxl = new ArrayList<Integer>();
+				auxl.add(l.getFrom());
+				auxMap.put(l.getTo(), auxl);
+			}
+		}
+		//Update parents
+		for(Person p : map.values()){
+			if(auxMap.containsKey(p.getId())){
+				p1 = null;
+				p2 = null;
+				auxl = auxMap.get(p.getId());
+
+				if(auxl.size() == 2 && map.containsKey(auxl.get(0)) && map.containsKey(auxl.get(1))){
+					p1 = map.get(auxl.get(0));
+					p2 = map.get(auxl.get(1));
+				} else if (auxl.size() == 1 && map.containsKey(auxl.get(0))){
+					p1 = map.get(auxl.get(0));
+				}
+				if(p1 != null && p2 != null){
+					if(p1.getGender() == 1 && p2.getGender() == 0){
+						p.setFatherId(p1.getId());
+						p.setMotherId(p2.getId());
+					} else {
+						p.setMotherId(p1.getId());
+						p.setFatherId(p2.getId());
+					}
+				} else if(p1 != null) {
+					if(p1.getGender() == 1){
+						p.setFatherId(p1.getId());
+					} else {
+						p.setMotherId(p1.getId());
+					}
+				}
 			}
 		}
 		return map;

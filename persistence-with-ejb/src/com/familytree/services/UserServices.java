@@ -1,7 +1,9 @@
 package com.familytree.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
@@ -17,6 +19,7 @@ import com.familytree.persistence.person.dao.PersonBean;
 import com.familytree.persistence.person.model.Person;
 import com.familytree.persistence.user.dao.UserBean;
 import com.familytree.persistence.user.model.User;
+import com.familytree.services.models.Line;
 import com.familytree.services.models.Return;
 import com.familytree.util.GsonFactory;
 import com.familytree.util.RequestHandler;
@@ -73,59 +76,57 @@ public class UserServices extends HttpServlet {
 		try { 
 			String s = request.getRemoteUser();
 			User u = userBean.getUserByUserName(s);
+			Person person;
 
 			Return data = frontEndGson.fromJson(RequestHandler.handleRequest(request),Return.class);
 
 			HashMap<Integer,Person> newData = (HashMap<Integer, Person>) data.returnToMap();
 			HashMap<Integer,Person> oldData = (HashMap<Integer, Person>) personBean.getMapAllPersonsByUserId(u.getId());
+			
 			//Set User PersonId
-			if(u.getPersonId() == null && data.getUser().getPersonId() != null){
-				userBean.updatePersonId(u.getId(),data.getUser().getPersonId());
+			if(u.getPersonId() == null && data.getUser().getPersonId() != null && 
+					newData.containsKey(data.getUser().getPersonId())){
+
+				person = newPerson(newData.remove(data.getUser().getPersonId()));
+				newData.put(person.getId(), person);
+				userBean.updatePersonId(u.getId(),person.getId());
+				u = userBean.getUserByUserName(s);
+				data.setUser(u);
 			}
+			
 			//Delete
 			for(Person p : oldData.values()){
-				if(!newData.containsKey(p.getId())){
+				if(!newData.containsKey(p.getId()) && p.getId() != u.getId()){
 					personBean.deletePerson(p);
 					oldData.remove(p.getId());
 				}
 			}
+			
 			//Create Persons
+			List<Person> news = new ArrayList<Person>();
+			Person added;
 			for(Person p : newData.values()){
 				if(p.getId()<0)	{
-					Person added = new Person();
-					added.setFirstName(p.getFirstName());
-					added.setLastName(p.getLastName());
-					added.setEmail(p.getEmail());
-					added.setBirthDate(p.getBirthDate());
-					added.setDeathDate(p.getDeathDate());
-					added.setGender(p.getGender());
-					added.setOwnerId(p.getOwnerId());
-					added.setLinkId(p.getLinkId());
-					added.setFatherId(p.getFatherId());
-					added.setMotherId(p.getMotherId());
-					added.setRelatedId(p.getRelatedId()); 
-					System.out.println("Added = "+added);
+					added = newPerson(p); 
 
-					personBean.addPerson(added);               //Create Person on db
+					newId(newData, p.getId(), added.getId());		//Update id's
 
-					newId(newData,p.getId(),added.getId());		//Update id's
-
-					newData.put(added.getId(),added);
-					newData.remove(p.getId()); 
-					System.out.println("added id = " + added.getId());
-
+					news.add(added);
+				} else {
+					news.add(p);
 				}
 			}
 
 			oldData = (HashMap<Integer, Person>) personBean.getMapAllPersonsByUserId(u.getId()); //update oldData whit db
-
-			for(Person p : newData.values()){
+			
+			//update Person
+			for(Person p : news){
 				if(!p.equals(oldData.get(p.getId()))){
 					personBean.updatePerson(p);
 				}
 			}
+			//return
 			Return r = new Return();
-
 			r.setUser(u);
 
 			if(u.getPersonId() != null){
@@ -134,7 +135,6 @@ public class UserServices extends HttpServlet {
 				r.addLines(map);		
 				r.addPersons(map);
 			}
-
 			response.getWriter().println(frontEndGson.toJson(r));
 		} catch (Exception e) {
 			response.getWriter().println("Persistence operation failed with reason: " + e.getMessage());
@@ -142,12 +142,33 @@ public class UserServices extends HttpServlet {
 		}
 	}
 	/**
+	 * Create a person on data base
+	 * @param p
+	 * @return
+	 */
+	public Person newPerson(Person p){
+		Person added = new Person();
+		added.setFirstName(p.getFirstName());
+		added.setLastName(p.getLastName());
+		added.setEmail(p.getEmail());
+		added.setBirthDate(p.getBirthDate());
+		added.setDeathDate(p.getDeathDate());
+		added.setGender(p.getGender());
+		added.setOwnerId(p.getOwnerId());
+		added.setLinkId(p.getLinkId());
+		added.setFatherId(p.getFatherId());
+		added.setMotherId(p.getMotherId());
+		added.setRelatedId(p.getRelatedId());
+
+		return personBean.addPerson(added); 
+	}
+	/**
 	 * Function used to update the user id created on the front end to the real id
 	 * @param map
 	 * @param o Temporary Id
 	 * @param n New Id
-	 */
-	private void newId(Map<Integer,Person> map,Integer o,Integer n){
+	 */	 
+	private void newId(Map<Integer,Person> map, Integer o, Integer n){
 		for(Person p : map.values()){
 			if(p.getFatherId() == o) p.setFatherId(n);
 			if(p.getMotherId() == o) p.setMotherId(n);
