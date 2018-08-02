@@ -24,8 +24,6 @@ public final class GsonFactory implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final GsonFactory INSTANCE = new GsonFactory();
-	// private static final Logger logger =
-	// LoggerFactoryWrapper.getLogger(GsonFactory.class);
 
 	public static GsonFactory getInstance() {
 		return INSTANCE;

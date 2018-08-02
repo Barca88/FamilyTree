@@ -57,9 +57,6 @@ public class PersonBean {
 		
 		return r;
     }
-	//update person mother
-	//update person father
-	//update person related
     /**
      * Add a person to the table.
      */

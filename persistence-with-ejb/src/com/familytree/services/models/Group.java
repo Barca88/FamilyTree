@@ -1,6 +1,9 @@
 package com.familytree.services.models;
 
-public class Group {
+import java.io.Serializable;
+
+public class Group implements Serializable{
+	private static final long serialVersionUID = 2394082100993456L;
     private int id;
     private String name;
 

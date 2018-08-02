@@ -1,6 +1,9 @@
 package com.familytree.services.models;
 
-public class Line {
+import java.io.Serializable;
+
+public class Line implements Serializable{
+	private static final long serialVersionUID = 198794874212122488L;
 	private Integer from;
 	private Integer to;
 	

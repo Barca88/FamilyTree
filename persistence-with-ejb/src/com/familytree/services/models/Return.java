@@ -1,5 +1,6 @@
 package com.familytree.services.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,7 +12,8 @@ import com.familytree.persistence.user.model.User;
 import com.familytree.services.models.Line;
 import com.familytree.services.models.Group;
 
-public class Return {
+public class Return implements Serializable{
+	private static final long serialVersionUID = 198948989983132L;
 	private User user;
 	private List<Person> nodes;
 	private List<Line> lines;
@@ -40,6 +42,10 @@ public class Return {
 	public void addPersons(Map<Integer,Person> map){
 		this.setNodes(map.values());
 	}
+	/**
+	 * Return -> to map of Persons with there parameters correct
+	 * @return
+	 */
 	public Map<Integer,Person> returnToMap(){
 		HashMap<Integer,Person> map = new HashMap<Integer,Person>();
 		for(Person p : this.getNodes()){
@@ -49,7 +55,6 @@ public class Return {
 		map = (HashMap<Integer, Person>) addRelations(this.groups,map);
 		return map;
 	}
-	//looks inefficient 
 	public Map<Integer,Person> addRelations(List<Group> groups, Map<Integer,Person> map){
 		HashMap<Integer,Group> mgroup = new HashMap<Integer,Group>();
 		HashMap<Integer,List<Person>> mpair = new HashMap<Integer,List<Person>>();
@@ -80,6 +85,12 @@ public class Return {
 		}
 		return map;
 	}
+	/**
+	 * Function created to 
+	 * @param list
+	 * @param map
+	 * @return
+	 */
 	public Map<Integer,Person> addParents(List<Line> list, Map<Integer,Person> map){
 		Person pai;
 		Person son;
@@ -94,6 +105,11 @@ public class Return {
 		}
 		return map;
 	}
+	/**
+	 * Function used to create groups that represent relations between 2 persons
+	 * @param map
+	 * @return
+	 */
 	public Map<Integer,Person> addGroups(Map<Integer,Person> map){
 		ArrayList<Group> groups = new ArrayList<Group>();
 		//group
@@ -118,7 +134,6 @@ public class Return {
 					groups.add(new Group(id,person.getLastName()));
 					id++;
 				}
-
 			}
 			aux.put(p.getId(), p);
 			if(b) { 
@@ -166,7 +181,7 @@ public class Return {
 	public void setUser(User u){
 		this.user = u.clone();
 	}
-	public void setNodes(Collection<Person> p){   // Não sei se funciona 
+	public void setNodes(Collection<Person> p){  
 		ArrayList<Person> r = new ArrayList<Person>();
 		for(Person person : p) r.add(person.clone());
 		this.nodes = r;
