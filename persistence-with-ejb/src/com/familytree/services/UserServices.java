@@ -38,21 +38,17 @@ public class UserServices extends HttpServlet {
 
 	@EJB
 	private PersonBean personBean;
-
+	
 	/** {@inheritDoc} */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Return r = new Return();
-			String s;
-			
-			Return data = frontEndGson.fromJson(RequestHandler.handleRequest(request),Return.class);
-			if(data.getUser() != null && data.getUser().getUserName() != null){
-				s = data.getUser().getUserName();
-			} else {
-				s = request.getRemoteUser();
+			String s = request.getRemoteUser();
+			String userName = request.getParameter("userName");
+			if(userBean.existUser(userName)){
+				s = userName;
 			}
-			
 			if(!userBean.existUser(s)){
 				User u = new User();
 				u.setUserName(s);
