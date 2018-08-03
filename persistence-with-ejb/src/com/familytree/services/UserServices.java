@@ -44,8 +44,15 @@ public class UserServices extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Return r = new Return();
-			String s = request.getRemoteUser();
-
+			String s;
+			
+			Return data = frontEndGson.fromJson(RequestHandler.handleRequest(request),Return.class);
+			if(data.getUser() != null && data.getUser().getUserName() != null){
+				s = data.getUser().getUserName();
+			} else {
+				s = request.getRemoteUser();
+			}
+			
 			if(!userBean.existUser(s)){
 				User u = new User();
 				u.setUserName(s);
